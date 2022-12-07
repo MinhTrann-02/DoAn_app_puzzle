@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:app_puzzle/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -49,12 +51,7 @@ class MenuState extends State<Menu> {
                       ),
                       child: TextButton(
                         onPressed: () async {
-                          await FirebaseAuth.instance.signOut();
-                          Navigator.pushNamedAndRemoveUntil(
-                              context, 'welcome', (route) => false);
-                          const snackBar =
-                              SnackBar(content: Text('Đăng xuất thành công!'));
-                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          _dialogBuilder(context);
                         },
                         child: const Text(
                           'Đăng xuất',
@@ -116,6 +113,43 @@ class MenuState extends State<Menu> {
           ),
         ],
       ),
+    );
+  }
+
+  Future<void> _dialogBuilder(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Đăng xuất"),
+          content: const Text("Bạn có chắc chắn muốn đăng xuất?"),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text(
+                'No',
+                style: TextStyle(color: Colors.black),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text('Yes'),
+              onPressed: () async {
+                await FirebaseAuth.instance.signOut();
+                Navigator.pushNamedAndRemoveUntil(
+                    context, 'welcome', (route) => false);
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

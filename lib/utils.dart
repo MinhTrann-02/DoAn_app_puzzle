@@ -973,7 +973,7 @@ class Utils {
     );
   }
 
-  static Padding answer(String text, var onClick) {
+  static Padding answer(String text, var onClick, bool answer) {
     return Padding(
       padding: const EdgeInsets.only(top: 30),
       child: Row(
@@ -983,10 +983,9 @@ class Utils {
             flex: 8,
             child: Container(
               width: 100,
-              height: 55,
-              alignment: Alignment.centerLeft,
+              height: 70,
               decoration: BoxDecoration(
-                color: const Color(0xFFAFAFAF),
+                color: const Color(0xFFB4B291),
                 borderRadius: BorderRadius.circular(15),
               ),
               child: TextButton(
@@ -996,7 +995,7 @@ class Utils {
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: Colors.black,
                   ),
                 ),
               ),

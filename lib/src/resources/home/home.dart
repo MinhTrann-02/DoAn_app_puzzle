@@ -1,5 +1,6 @@
 import 'package:app_puzzle/src/resources/play_game/theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:app_puzzle/utils.dart';
@@ -16,6 +17,7 @@ class Home extends StatefulWidget {
 }
 
 class HomeState extends State<Home> {
+  final _auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     List listFirend = [
@@ -26,6 +28,7 @@ class HomeState extends State<Home> {
       "Admin",
       "TEst"
     ];
+    final loginUser = _auth.currentUser;
     return Scaffold(
       backgroundColor: const Color(0xFFE9F8FF),
       appBar: PreferredSize(
@@ -46,6 +49,25 @@ class HomeState extends State<Home> {
               const SizedBox(height: 120),
               Utils.avatar(),
               const SizedBox(height: 10),
+              // StreamBuilder<QuerySnapshot>(
+              //   stream: FirebaseFirestore.instance
+              //       .collection("users")
+              //       .orderBy('user_name')
+              //       // .where('user_name', isNotEqualTo: loginUser!.email)
+              //       .snapshots(),
+              //   builder: (context, snapshot) {
+              //     if (snapshot.hasData) {
+              //       final data = snapshot.data!.docs;
+              //       List<String> lsUsers = [];
+              //       // String username = '';
+              //       for (var row in data) {
+              //         final read = row.data() as Map<String, dynamic>;
+              //         lsUsers.add(read['user_name']);
+              //       }
+              //       return Text(lsUsers);
+              //     }
+              //   },
+              // ),
               const Text(
                 'User Name',
                 style: TextStyle(fontSize: 20),

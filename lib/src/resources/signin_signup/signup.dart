@@ -1,4 +1,4 @@
-// ignore_for_file: library_private_types_in_public_api, non_constant_identifier_names, unnecessary_null_comparison
+// ignore_for_file: library_private_types_in_public_api, non_constant_identifier_names, unnecessary_null_comparison, avoid_print
 import 'package:app_puzzle/src/blocs/signup_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -93,32 +93,22 @@ class _SignUpState extends State<SignUp> {
                                     _auth.createUserWithEmailAndPassword(
                                         email: email.text,
                                         password: password.text);
-                                final user = <String, dynamic>{
-                                  'email': email,
-                                  'password': password,
-                                  'user_name': username,
-                                };
-                                firestore.collection("users").add(user).then(
-                                    (DocumentReference doc) => print(
-                                        'DocumentSnapshot added with ID: ${doc.id}'));
-                                if (newUser != null) {
-                                  Navigator.pop(context);
-                                  // const snackBar = SnackBar(
-                                  //     content: Text('Đăng ký thành công!'));
-                                  // ScaffoldMessenger.of(context)
-                                  //     .showSnackBar(snackBar);
-                                  // Create a new user with a first and last name
+                                // final user = <String, dynamic>{
+                                //   'email': email,
+                                //   'password': password,
+                                //   'user_name': username,
+                                // };
 
-                                  // Future<void> addUser() {
-                                  //   return users
-                                  //       .add({
-                                  //         'email': email,
-                                  //         'password': password,
-                                  //         'user_name': username,
-                                  //       })
-                                  //       .then((value) => Navigator.pop(context))
-                                  //       .catchError((error) => print('Loi'));
-                                  // }
+                                // // firestore.collection("users").add(user);
+                                // firestore.collection("users").add(user).then(
+                                //     (DocumentReference doc) => print(
+                                //         'DocumentSnapshot added with ID: ${doc.id}'));
+                                if (newUser != null) {
+                                  const snackBar = SnackBar(
+                                      content: Text('Đăng ký thành công!'));
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBar);
+                                  Navigator.pop(context);
                                 } else {
                                   const snackBar = SnackBar(
                                       content: Text('Tài khoản không hợp lệ!'));

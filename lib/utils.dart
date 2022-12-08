@@ -356,73 +356,37 @@ class Utils {
   }
 
   //Listview History
-  static Padding history(String day, String image, String question, bool b) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 5, bottom: 5),
-      child: Expanded(
-        child: Container(
-          // alignment: Alignment.center,
-          height: 170,
-          color: const Color(0xFFD6DDE4),
-          child: Padding(
-            padding: const EdgeInsets.only(left: 10),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 5),
-                Text(
-                  day,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  // mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SizedBox(
-                      height: 90,
-                      width: 140,
-                      child: Image.asset(image),
-                    ),
-                    const SizedBox(width: 5),
-                    Expanded(
-                      child: Text(
-                        question,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Container(
-                        alignment: AlignmentDirectional.center,
-                        height: 30,
-                        width: 50,
-                        decoration: BoxDecoration(
-                          color: b
-                              ? const Color(0xFF7CFA71)
-                              : const Color(0xFFFA7A71),
-                          border: Border.all(width: 1),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: b ? const Text('Đúng') : const Text('Sai'),
-                      )
-                    ],
-                  ),
-                ),
-              ],
+  static Card history(String question, bool b) {
+    return Card(
+      child: ListTile(
+        tileColor: const Color(0xFFD6DDE4),
+        title: Padding(
+          padding: const EdgeInsets.only(top: 10),
+          child: Text(
+            question,
+            style: const TextStyle(fontSize: 19),
+          ),
+        ),
+        subtitle: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 140, vertical: 15),
+          child: Container(
+            alignment: AlignmentDirectional.center,
+            height: 30,
+            // width: 50,
+            decoration: BoxDecoration(
+              color: b ? const Color(0xFF7CFA71) : const Color(0xFFFA7A71),
+              border: Border.all(width: 1),
+              borderRadius: BorderRadius.circular(8),
             ),
+            child: b
+                ? const Text(
+                    'Đúng',
+                    style: TextStyle(fontSize: 17),
+                  )
+                : const Text(
+                    'Sai',
+                    style: TextStyle(fontSize: 17),
+                  ),
           ),
         ),
       ),
@@ -973,7 +937,7 @@ class Utils {
     );
   }
 
-  static Padding answer(String text, var onClick, bool answer) {
+  static Padding answer(String text, var onClick) {
     return Padding(
       padding: const EdgeInsets.only(top: 30),
       child: Row(

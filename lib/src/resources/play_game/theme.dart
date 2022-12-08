@@ -1,5 +1,7 @@
+// ignore_for_file: non_constant_identifier_names
+
+import 'package:app_puzzle/src/resources/home_page.dart';
 import 'package:app_puzzle/src/resources/play_game/play.dart';
-import 'package:app_puzzle/src/resources/play_game/play_test.dart';
 import 'package:flutter/material.dart';
 import '../../../utils.dart';
 
@@ -13,14 +15,6 @@ class ThemePage extends StatefulWidget {
 }
 
 class ThemePageState extends State<ThemePage> {
-  List list = [
-    "Khoa học",
-    "Văn Học",
-    "Lịch sử",
-    "Địa lý",
-    "Đố vui",
-    "Hại não",
-  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,19 +30,8 @@ class ThemePageState extends State<ThemePage> {
           ],
         ),
       ),
-      // body: Container(
-      //   constraints: const BoxConstraints.expand(),
-      //   color: const Color(0xFFE9F8FF),
-      //   alignment: Alignment.center,
-      //   child: ListView.builder(
-      //     itemCount: list.length,
-      //     itemBuilder: (context, index) {
-      //       return Utils.listTheme(list[index]);
-      //     },
-      //   ),
-      // ),
       body: Container(
-        constraints: const BoxConstraints.expand(),
+        // constraints: const BoxConstraints.expand(),
         color: const Color(0xFFE9F8FF),
         alignment: Alignment.center,
         child: Column(
@@ -63,21 +46,92 @@ class ThemePageState extends State<ThemePage> {
                 ),
               ),
             ),
-            Utils.listTheme("Khoa học", onClickedPlay),
-            Utils.listTheme("Lịch sử", null),
-            Utils.listTheme("Địa lý", null),
+            Utils.listTheme("Khoa học", play_KhoaHoc),
+            Utils.listTheme("Lịch sử", play_LichSu),
+            Utils.listTheme("Địa lý", play_DiaLy),
             Utils.listTheme("Đố vui", null),
-            Utils.listTheme("Hại não", null),
+            Utils.listTheme("Văn học", play_VanHoc),
+            Padding(
+              padding: const EdgeInsets.only(top: 70),
+              child: IconButton(
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const HomePage(),
+                      ),
+                      (route) => false);
+                },
+                icon: const Icon(Icons.exit_to_app),
+                iconSize: 40,
+                color: const Color(0xFF59A9DF),
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 
-  void onClickedPlay() {
+  String theme = '';
+
+  void play_KhoaHoc() {
     setState(() {
+      theme = 'goikhoahoc';
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const Play()));
+          context,
+          MaterialPageRoute(
+              builder: (context) => Play(
+                    theme: theme,
+                  )));
+    });
+  }
+
+  void play_LichSu() {
+    setState(() {
+      theme = 'goilichsu';
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Play(
+                    theme: theme,
+                  )));
+    });
+  }
+
+  void play_DiaLy() {
+    setState(() {
+      theme = 'goidialy';
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Play(
+                    theme: theme,
+                  )));
+    });
+  }
+
+  void play_DoVui() {
+    setState(() {
+      theme = 'goikhoahoc';
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Play(
+                    theme: theme,
+                  )));
+    });
+  }
+
+  void play_VanHoc() {
+    setState(() {
+      theme = 'goivanhoc';
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Play(
+                    theme: theme,
+                  )));
     });
   }
 }

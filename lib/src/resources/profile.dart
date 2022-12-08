@@ -1,8 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:app_puzzle/utils.dart';
-
-import '../home_page.dart';
-import 'edit_profile.dart';
+import 'home_page.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -14,6 +13,9 @@ class Profile extends StatefulWidget {
 }
 
 class ProfileState extends State<Profile> {
+  final String documentId = 'bM1zeTSweCpD5Yk8bs8v';
+
+  CollectionReference info = FirebaseFirestore.instance.collection('users');
   @override
   Widget build(BuildContext context) {
     List listBasket = [
@@ -28,14 +30,33 @@ class ProfileState extends State<Profile> {
         child: AppBar(
           automaticallyImplyLeading: false,
           backgroundColor: const Color(0xFFE9F8FF),
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Utils.stackHead_noAdd('0', 'icons/icon-star.png'),
-              Utils.stackHead('0', 'icons/icon-money.png'),
-              Utils.stackHead('Max', 'icons/icon-heart.png'),
-            ],
-          ),
+          title: FutureBuilder<DocumentSnapshot>(
+              future: info.doc(documentId).get(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<DocumentSnapshot> snapshot) {
+                if (snapshot.hasError) {
+                  return const Text("Có gì đó sai sai?");
+                }
+                if (snapshot.hasData && !snapshot.data!.exists) {
+                  return const Text("Không trùng thông tin!");
+                }
+                if (snapshot.connectionState == ConnectionState.done) {
+                  Map<String, dynamic> data =
+                      snapshot.data!.data() as Map<String, dynamic>;
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Utils.stackHead_noAdd(
+                          data['star_point'].toString(), 'icons/icon-star.png'),
+                      Utils.stackHead(data['money_point'].toString(),
+                          'icons/icon-money.png'),
+                      Utils.stackHead(data['heart_point'].toString(),
+                          'icons/icon-heart.png'),
+                    ],
+                  );
+                }
+                return const Text("Loanding...");
+              }),
           flexibleSpace: Stack(
             alignment: AlignmentDirectional.bottomCenter,
             children: [
@@ -55,30 +76,30 @@ class ProfileState extends State<Profile> {
                     style: TextStyle(fontSize: 20),
                   ),
                   const SizedBox(width: 65),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 25),
-                    child: TextButton(
-                      onPressed: onTapEdit,
-                      style: TextButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                      ),
-                      child: const CircleAvatar(
-                        backgroundColor: Colors.white70,
-                        radius: 25,
-                        child: CircleAvatar(
-                          backgroundColor: Colors.grey,
-                          radius: 20,
-                          child: Icon(
-                            Icons.edit,
-                            color: Colors.white,
-                            size: 28,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.only(bottom: 25),
+                  //   child: TextButton(
+                  //     onPressed: onTapEdit,
+                  //     style: TextButton.styleFrom(
+                  //       shape: RoundedRectangleBorder(
+                  //         borderRadius: BorderRadius.circular(50),
+                  //       ),
+                  //     ),
+                  //     child: const CircleAvatar(
+                  //       backgroundColor: Colors.white70,
+                  //       radius: 25,
+                  //       child: CircleAvatar(
+                  //         backgroundColor: Colors.grey,
+                  //         radius: 20,
+                  //         child: Icon(
+                  //           Icons.edit,
+                  //           color: Colors.white,
+                  //           size: 28,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             ],
@@ -196,12 +217,6 @@ class ProfileState extends State<Profile> {
                   '15',
                   '54',
                 ),
-                Utils.listRate(
-                  'images/rate-hainao.png',
-                  'Hại não',
-                  '25',
-                  '97',
-                ),
               ],
             ),
           ),
@@ -222,13 +237,6 @@ class ProfileState extends State<Profile> {
     setState(() {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => const HomePage()));
-    });
-  }
-
-  void onTapEdit() {
-    setState(() {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const EditProfile()));
     });
   }
 }

@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:app_puzzle/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,6 +15,9 @@ class Menu extends StatefulWidget {
 }
 
 class MenuState extends State<Menu> {
+  final String documentId = 'bM1zeTSweCpD5Yk8bs8v';
+
+  CollectionReference info = FirebaseFirestore.instance.collection('users');
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,14 +27,33 @@ class MenuState extends State<Menu> {
         child: AppBar(
           automaticallyImplyLeading: false,
           backgroundColor: const Color(0xFFE9F8FF),
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Utils.stackHead_noAdd('0', 'icons/icon-star.png'),
-              Utils.stackHead('0', 'icons/icon-money.png'),
-              Utils.stackHead('Max', 'icons/icon-heart.png'),
-            ],
-          ),
+          title: FutureBuilder<DocumentSnapshot>(
+              future: info.doc(documentId).get(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<DocumentSnapshot> snapshot) {
+                if (snapshot.hasError) {
+                  return const Text("Có gì đó sai sai?");
+                }
+                if (snapshot.hasData && !snapshot.data!.exists) {
+                  return const Text("Không trùng thông tin!");
+                }
+                if (snapshot.connectionState == ConnectionState.done) {
+                  Map<String, dynamic> data =
+                      snapshot.data!.data() as Map<String, dynamic>;
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Utils.stackHead_noAdd(
+                          data['star_point'].toString(), 'icons/icon-star.png'),
+                      Utils.stackHead(data['money_point'].toString(),
+                          'icons/icon-money.png'),
+                      Utils.stackHead(data['heart_point'].toString(),
+                          'icons/icon-heart.png'),
+                    ],
+                  );
+                }
+                return const Text("Loanding...");
+              }),
           flexibleSpace: Column(
             children: [
               const SizedBox(height: 120),
@@ -50,7 +73,7 @@ class MenuState extends State<Menu> {
                         borderRadius: BorderRadius.circular(15),
                       ),
                       child: TextButton(
-                        onPressed: () async {
+                        onPressed: () {
                           _dialogBuilder(context);
                         },
                         child: const Text(

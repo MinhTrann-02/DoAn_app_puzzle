@@ -1,7 +1,5 @@
 import 'package:app_puzzle/src/resources/play_game/theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:app_puzzle/utils.dart';
 import 'daily_bonus.dart';
@@ -17,7 +15,9 @@ class Home extends StatefulWidget {
 }
 
 class HomeState extends State<Home> {
-  final _auth = FirebaseAuth.instance;
+  final String documentId = 'bM1zeTSweCpD5Yk8bs8v';
+
+  CollectionReference info = FirebaseFirestore.instance.collection('users');
   @override
   Widget build(BuildContext context) {
     List listFirend = [
@@ -28,105 +28,106 @@ class HomeState extends State<Home> {
       "Admin",
       "TEst"
     ];
-    final loginUser = _auth.currentUser;
     return Scaffold(
       backgroundColor: const Color(0xFFE9F8FF),
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(370.0),
-        child: AppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: const Color(0xFFE9F8FF),
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Utils.stackHead_noAdd('0', 'icons/icon-star.png'),
-              Utils.stackHead('0', 'icons/icon-money.png'),
-              Utils.stackHead('Max', 'icons/icon-heart.png'),
-            ],
-          ),
-          flexibleSpace: Column(
-            children: [
-              const SizedBox(height: 120),
-              Utils.avatar(),
-              const SizedBox(height: 10),
-              // StreamBuilder<QuerySnapshot>(
-              //   stream: FirebaseFirestore.instance
-              //       .collection("users")
-              //       .orderBy('user_name')
-              //       // .where('user_name', isNotEqualTo: loginUser!.email)
-              //       .snapshots(),
-              //   builder: (context, snapshot) {
-              //     if (snapshot.hasData) {
-              //       final data = snapshot.data!.docs;
-              //       List<String> lsUsers = [];
-              //       // String username = '';
-              //       for (var row in data) {
-              //         final read = row.data() as Map<String, dynamic>;
-              //         lsUsers.add(read['user_name']);
-              //       }
-              //       return Text(lsUsers);
-              //     }
-              //   },
-              // ),
-              const Text(
-                'User Name',
-                style: TextStyle(fontSize: 20),
-              ),
-              const SizedBox(height: 15),
-              Row(
-                children: [
-                  Expanded(child: Container(height: 56)),
-                  Expanded(
-                    flex: 3,
-                    child: Container(
-                      width: 100,
-                      height: 55,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF69DF59),
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const ThemePage()));
-                        },
-                        child: const Text(
-                          'Chơi',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
+        child: FutureBuilder<DocumentSnapshot>(
+            future: info.doc(documentId).get(),
+            builder: (BuildContext context,
+                AsyncSnapshot<DocumentSnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return const Text("Có gì đó sai sai?");
+              }
+              if (snapshot.hasData && !snapshot.data!.exists) {
+                return const Text("Không trùng thông tin!");
+              }
+              if (snapshot.connectionState == ConnectionState.done) {
+                Map<String, dynamic> data =
+                    snapshot.data!.data() as Map<String, dynamic>;
+                return AppBar(
+                  automaticallyImplyLeading: false,
+                  backgroundColor: const Color(0xFFE9F8FF),
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Utils.stackHead_noAdd(
+                          data['star_point'].toString(), 'icons/icon-star.png'),
+                      Utils.stackHead(data['money_point'].toString(),
+                          'icons/icon-money.png'),
+                      Utils.stackHead(data['heart_point'].toString(),
+                          'icons/icon-heart.png'),
+                    ],
                   ),
-                  Expanded(child: Container(height: 56)),
-                ],
-              ),
-            ],
-          ),
-          bottom: TabBar(
-            tabs: [
-              Tab(
-                child: Utils.iconWithColor(Icons.home, 'Trang chủ'),
-              ),
-              Tab(
-                child: Utils.iconWithColor(Icons.event_note, 'Nhiệm vụ'),
-              ),
-              Tab(
-                child: Utils.iconWithColor(Icons.people, 'Bạn bè'),
-              ),
-            ],
-            indicatorColor: Colors.black,
-            indicatorWeight: 7,
-            labelColor: Colors.black,
-            unselectedLabelColor: Colors.black54,
-            labelPadding: const EdgeInsets.only(bottom: 5),
-          ),
-        ),
+                  flexibleSpace: Column(
+                    children: [
+                      const SizedBox(height: 120),
+                      Utils.avatar(),
+                      const SizedBox(height: 10),
+                      Text(
+                        data['user_name'],
+                        style: const TextStyle(fontSize: 22),
+                      ),
+                      const SizedBox(height: 15),
+                      Row(
+                        children: [
+                          Expanded(child: Container(height: 56)),
+                          Expanded(
+                            flex: 3,
+                            child: Container(
+                              width: 100,
+                              height: 55,
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF69DF59),
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: TextButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const ThemePage()));
+                                },
+                                child: const Text(
+                                  'Chơi',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Expanded(child: Container(height: 56)),
+                        ],
+                      ),
+                    ],
+                  ),
+                  bottom: TabBar(
+                    tabs: [
+                      Tab(
+                        child: Utils.iconWithColor(Icons.home, 'Trang chủ'),
+                      ),
+                      Tab(
+                        child:
+                            Utils.iconWithColor(Icons.event_note, 'Nhiệm vụ'),
+                      ),
+                      Tab(
+                        child: Utils.iconWithColor(Icons.people, 'Bạn bè'),
+                      ),
+                    ],
+                    indicatorColor: Colors.black,
+                    indicatorWeight: 7,
+                    labelColor: Colors.black,
+                    unselectedLabelColor: Colors.black54,
+                    labelPadding: const EdgeInsets.only(bottom: 5),
+                  ),
+                );
+              }
+              return const Text("Loanding...");
+            }),
       ),
       body: TabBarView(
         children: [

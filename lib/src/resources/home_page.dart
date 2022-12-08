@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'history.dart';
 import 'home/home.dart';
 import 'menu.dart';
-import 'profile/profile.dart';
+import 'profile.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

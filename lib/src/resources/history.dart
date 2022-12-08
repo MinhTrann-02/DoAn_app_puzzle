@@ -11,6 +11,16 @@ class History extends StatefulWidget {
 }
 
 class HistoryState extends State<History> {
+  bool result = true;
+  List<String> lsQuestion = [
+    "Nhà khoa học nào dưới đây là người tìm ra vắc-xin chữa bệnh Dại",
+    "Loài nào dưới đây không phải là 'Loài bản địa' của Việt Nam?",
+    "Phát minh nào dưới đây ra đời sớm nhất?",
+    "'Năm ánh sáng' là đơn vị dùng để đo đại lượng nào trong vũ trụ?",
+    "Theo các nhà thiên văn học, thành phần chủ yếu cấu tạo nên sao chổi là gì?",
+  ];
+  List<bool> lsBool = [true, true, true, false, false];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,46 +37,11 @@ class HistoryState extends State<History> {
           ),
         ),
       ),
-      body: ListView(
-        shrinkWrap: true,
-        children: [
-          Utils.history(
-            '20/10/2022',
-            'images/history-1.png',
-            'Làm gì để qua môn Lập Trình Di Động',
-            true,
-          ),
-          Utils.history(
-            '20/10/2022',
-            'images/history-2.png',
-            'Làm gì để qua môn Lập Trình Di Động',
-            false,
-          ),
-          Utils.history(
-            '20/10/2022',
-            'images/history-3.png',
-            'Làm gì để qua môn Lập Trình Di Động',
-            true,
-          ),
-          Utils.history(
-            '20/10/2022',
-            'images/history-4.png',
-            'Làm gì để qua môn Lập Trình Di Động',
-            false,
-          ),
-          Utils.history(
-            '20/10/2022',
-            'images/history-1.png',
-            'Làm gì để qua môn Lập Trình Di Động',
-            true,
-          ),
-          Utils.history(
-            '20/10/2022',
-            'images/history-2.png',
-            'Làm gì để qua môn Lập Trình Di Động',
-            false,
-          ),
-        ],
+      body: ListView.builder(
+        itemCount: lsQuestion.length,
+        itemBuilder: (context, index) {
+          return Utils.history(lsQuestion[index], lsBool[index]);
+        },
       ),
     );
   }

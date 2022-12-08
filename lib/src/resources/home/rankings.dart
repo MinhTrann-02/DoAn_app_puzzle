@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:app_puzzle/utils.dart';
 
 class Rankings extends StatefulWidget {
   const Rankings({super.key});
@@ -9,6 +8,19 @@ class Rankings extends StatefulWidget {
 }
 
 class _RankingsState extends State<Rankings> {
+  List<String> lsRank = [
+    "Minh Trần",
+    "Nguyễn Gia Bảo",
+    "Nguyễn Anh Hào",
+    "Trần Phương",
+    "Nguyễn Văn A",
+    "Nguyễn Văn B",
+    "Nguyễn Văn C",
+    "Nguyễn Văn D",
+    "Trần Văn A",
+    "Trần Văn B"
+  ];
+  List<int> lsRank2 = [999, 956, 879, 704, 609, 538, 412, 356, 243, 120, 99];
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -52,7 +64,7 @@ class _RankingsState extends State<Rankings> {
             Container(
               color: const Color(0xFFE9F8FF),
               child: ListView.builder(
-                itemCount: 10,
+                itemCount: lsRank.length,
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
@@ -67,11 +79,6 @@ class _RankingsState extends State<Rankings> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            // if (index == 0)
-                            // Padding(
-                            //   padding: const EdgeInsets.all(10),
-                            //   child: Image.asset('images/ranking-01.png'),
-                            // ),
                             Expanded(
                               flex: 1,
                               child: Container(
@@ -92,31 +99,27 @@ class _RankingsState extends State<Rankings> {
                             ),
                             Expanded(
                               flex: 3,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Utils.avatar(),
-                                  const Text(
-                                    'Minh Trần',
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 15),
+                                child: Text(
+                                  lsRank[index],
+                                  style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
+                                ),
                               ),
                             ),
                             Expanded(
                               flex: 2,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
-                                children: const [
+                                children: [
                                   Text(
-                                    '9999',
-                                    style: TextStyle(fontSize: 17),
+                                    lsRank2[index].toString(),
+                                    style: const TextStyle(fontSize: 17),
                                   ),
-                                  SizedBox(width: 10),
-                                  Icon(
+                                  const SizedBox(width: 10),
+                                  const Icon(
                                     Icons.star,
                                     color: Colors.yellow,
                                   ),
@@ -149,11 +152,6 @@ class _RankingsState extends State<Rankings> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            // if (index == 0)
-                            // Padding(
-                            //   padding: const EdgeInsets.all(10),
-                            //   child: Image.asset('images/ranking-01.png'),
-                            // ),
                             Expanded(
                               flex: 1,
                               child: Container(
@@ -174,31 +172,27 @@ class _RankingsState extends State<Rankings> {
                             ),
                             Expanded(
                               flex: 3,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Utils.avatar(),
-                                  const Text(
-                                    'Minh Trần',
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 15),
+                                child: Text(
+                                  lsRank[index],
+                                  style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
+                                ),
                               ),
                             ),
                             Expanded(
                               flex: 2,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
-                                children: const [
+                                children: [
                                   Text(
-                                    '9999',
-                                    style: TextStyle(fontSize: 17),
+                                    lsRank2[index].toString(),
+                                    style: const TextStyle(fontSize: 17),
                                   ),
-                                  SizedBox(width: 10),
-                                  Icon(
+                                  const SizedBox(width: 10),
+                                  const Icon(
                                     Icons.star,
                                     color: Colors.yellow,
                                   ),

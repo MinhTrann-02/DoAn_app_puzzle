@@ -15,7 +15,7 @@ class Play extends StatefulWidget {
 }
 
 class PlayState extends State<Play> {
-  late CollectionReference goikhoahoc =
+  late CollectionReference chude =
       FirebaseFirestore.instance.collection(widget.theme);
 
   List lsResult = ["dapan1", "dapan2", "dapan3", "dapandung"];
@@ -33,9 +33,12 @@ class PlayState extends State<Play> {
   ];
   int idAnswer = 0;
   var color_origin = const Color(0xFFB4B291);
+  var color_50 = Color.fromARGB(0, 180, 178, 145);
   var color_black = const Color(0xFF000000);
   int total_true = 0;
   int total = 0;
+  int total_next = 0;
+  bool trogiup_50 = false;
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +57,7 @@ class PlayState extends State<Play> {
     }
 
     bool trogiup_50 = true;
+    int i = 0;
 
     Size size = MediaQuery.of(context).size;
     return Scaffold(
@@ -64,7 +68,7 @@ class PlayState extends State<Play> {
           color: const Color(0xFFE9F8FF),
           alignment: Alignment.center,
           child: FutureBuilder<DocumentSnapshot>(
-            future: goikhoahoc.doc(lsAnswer[idAnswer]).get(),
+            future: chude.doc(lsAnswer[idAnswer]).get(),
             builder: (BuildContext context,
                 AsyncSnapshot<DocumentSnapshot> snapshot) {
               if (snapshot.hasError) {
@@ -137,10 +141,11 @@ class PlayState extends State<Play> {
                                       child: Text(
                                         //Câu trả lời
                                         data[lsResult[random1]],
-                                        style: const TextStyle(
+
+                                        style: TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.bold,
-                                          color: Colors.black,
+                                          color: color_black,
                                         ),
                                       ),
                                     ),
@@ -314,9 +319,7 @@ class PlayState extends State<Play> {
                             child: SizedBox(
                               height: 80,
                               child: ElevatedButton(
-                                onPressed: () {
-                                  trogiup_50 = false;
-                                },
+                                onPressed: () {},
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.red,
                                 ),
@@ -334,7 +337,17 @@ class PlayState extends State<Play> {
                             child: SizedBox(
                               height: 80,
                               child: ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  total_next++;
+                                  if (idAnswer < lsAnswer.length - 1) {
+                                    idAnswer = idAnswer + 1;
+                                  }
+                                  setState(() {
+                                    if (total + total_next == lsAnswer.length) {
+                                      result_answer(context);
+                                    }
+                                  });
+                                },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.green,
                                 ),
@@ -410,8 +423,8 @@ class PlayState extends State<Play> {
               Image.asset(
                 'images/right_128.png',
               ),
-              SizedBox(height: 20),
-              Text(
+              const SizedBox(height: 20),
+              const Text(
                 "Bạn đã trả lời đúng!",
                 style: TextStyle(fontSize: 18),
               ),
@@ -432,7 +445,7 @@ class PlayState extends State<Play> {
                 }
                 setState(() {
                   Navigator.of(context).pop();
-                  if (total == lsAnswer.length) {
+                  if (total + total_next == lsAnswer.length) {
                     result_answer(context);
                   }
                 });
@@ -455,8 +468,8 @@ class PlayState extends State<Play> {
               Image.asset(
                 'images/wrong_128.png',
               ),
-              SizedBox(height: 20),
-              Text(
+              const SizedBox(height: 20),
+              const Text(
                 "Bạn đã trả lời sai!",
                 style: TextStyle(fontSize: 18),
               ),
@@ -478,7 +491,7 @@ class PlayState extends State<Play> {
 
                 setState(() {
                   Navigator.of(context).pop();
-                  if (total == lsAnswer.length) {
+                  if (total + total_next == lsAnswer.length) {
                     result_answer(context);
                   }
                 });

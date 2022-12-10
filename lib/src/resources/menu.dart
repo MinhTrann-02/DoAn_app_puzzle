@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:app_puzzle/src/resources/reset_password.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:app_puzzle/utils.dart';
@@ -14,8 +15,11 @@ class Menu extends StatefulWidget {
   }
 }
 
+final FirebaseAuth _auth = FirebaseAuth.instance;
+User user = _auth.currentUser!;
+
 class MenuState extends State<Menu> {
-  final String documentId = 'bM1zeTSweCpD5Yk8bs8v';
+  final String _uid = user.uid;
 
   CollectionReference info = FirebaseFirestore.instance.collection('users');
   @override
@@ -28,7 +32,7 @@ class MenuState extends State<Menu> {
           automaticallyImplyLeading: false,
           backgroundColor: const Color(0xFFE9F8FF),
           title: FutureBuilder<DocumentSnapshot>(
-              future: info.doc(documentId).get(),
+              future: info.doc(_uid).get(),
               builder: (BuildContext context,
                   AsyncSnapshot<DocumentSnapshot> snapshot) {
                 if (snapshot.hasError) {
@@ -123,7 +127,13 @@ class MenuState extends State<Menu> {
                 childAspectRatio: (1 / .68),
               ),
               shrinkWrap: true,
-              children: [],
+              children: [
+                Utils.gridViewButton_password(
+                    'Đổi mật khẩu',
+                    const Color(0xFFDC802B),
+                    Icons.lock_outline,
+                    onClick_resetPass),
+              ],
             ),
           ),
           ListView(
@@ -174,5 +184,15 @@ class MenuState extends State<Menu> {
         );
       },
     );
+  }
+
+  void onClick_resetPass() {
+    setState(() {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ResetPassword(),
+          ));
+    });
   }
 }

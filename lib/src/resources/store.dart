@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:app_puzzle/utils.dart';
 
@@ -11,8 +12,11 @@ class Store extends StatefulWidget {
   }
 }
 
+final FirebaseAuth _auth = FirebaseAuth.instance;
+User user = _auth.currentUser!;
+
 class StoreState extends State<Store> {
-  final String documentId = 'bM1zeTSweCpD5Yk8bs8v';
+  final String _uid = user.uid;
 
   CollectionReference info = FirebaseFirestore.instance.collection('users');
   @override
@@ -24,7 +28,7 @@ class StoreState extends State<Store> {
         appBar: AppBar(
           backgroundColor: const Color(0xFFE9F8FF),
           title: FutureBuilder<DocumentSnapshot>(
-              future: info.doc(documentId).get(),
+              future: info.doc(_uid).get(),
               builder: (BuildContext context,
                   AsyncSnapshot<DocumentSnapshot> snapshot) {
                 if (snapshot.hasError) {

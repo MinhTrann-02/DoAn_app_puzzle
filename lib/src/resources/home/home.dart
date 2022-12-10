@@ -1,5 +1,6 @@
 import 'package:app_puzzle/src/resources/play_game/theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:app_puzzle/utils.dart';
 import 'daily_bonus.dart';
@@ -14,10 +15,13 @@ class Home extends StatefulWidget {
   }
 }
 
-class HomeState extends State<Home> {
-  final String documentId = 'bM1zeTSweCpD5Yk8bs8v';
+final FirebaseAuth _auth = FirebaseAuth.instance;
+final User user = _auth.currentUser!;
 
+class HomeState extends State<Home> {
+  final String _uid = user.uid;
   CollectionReference info = FirebaseFirestore.instance.collection('users');
+
   @override
   Widget build(BuildContext context) {
     List listFirend = [
@@ -33,7 +37,7 @@ class HomeState extends State<Home> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(370.0),
         child: FutureBuilder<DocumentSnapshot>(
-            future: info.doc(documentId).get(),
+            future: info.doc(_uid).get(),
             builder: (BuildContext context,
                 AsyncSnapshot<DocumentSnapshot> snapshot) {
               if (snapshot.hasError) {

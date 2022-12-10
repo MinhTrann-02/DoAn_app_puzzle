@@ -8,8 +8,6 @@ import 'package:app_puzzle/utils.dart';
 
 import 'confirm_signup.dart';
 
-void main() => runApp(const SignUp());
-
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
 
@@ -23,7 +21,6 @@ class _SignUpState extends State<SignUp> {
   TextEditingController password = TextEditingController();
   TextEditingController re_password = TextEditingController();
   TextEditingController email = TextEditingController();
-  final _auth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   CollectionReference users = FirebaseFirestore.instance.collection('users');
   @override
@@ -89,20 +86,23 @@ class _SignUpState extends State<SignUp> {
                             if (bloc.isValidInfo(username.text, password.text,
                                 re_password.text, email.text)) {
                               try {
-                                final newUser =
-                                    _auth.createUserWithEmailAndPassword(
+                                UserCredential newUser = await FirebaseAuth
+                                    .instance
+                                    .createUserWithEmailAndPassword(
                                         email: email.text,
                                         password: password.text);
-                                // final user = <String, dynamic>{
-                                //   'email': email,
-                                //   'password': password,
-                                //   'user_name': username,
-                                // };
-
-                                // // firestore.collection("users").add(user);
-                                // firestore.collection("users").add(user).then(
-                                //     (DocumentReference doc) => print(
-                                //         'DocumentSnapshot added with ID: ${doc.id}'));
+                                User? user = newUser.user;
+                                await FirebaseFirestore.instance
+                                    .collection('users')
+                                    .doc(user?.uid)
+                                    .set({
+                                  "email": email.text,
+                                  "pass_word": password.text,
+                                  "user_name": username.text,
+                                  "star_point": 0,
+                                  "money_point": 100,
+                                  "heart_point": 5,
+                                });
                                 if (newUser != null) {
                                   const snackBar = SnackBar(
                                       content: Text('Đăng ký thành công!'));

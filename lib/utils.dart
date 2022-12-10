@@ -289,6 +289,38 @@ class Utils {
     );
   }
 
+  static Padding gridViewButton_password(
+      String text, Color colorBg, var icon, var onClicked) {
+    return Padding(
+      padding: const EdgeInsets.all(5.0),
+      child: GestureDetector(
+        onTap: onClicked,
+        child: Container(
+          decoration: BoxDecoration(
+              color: colorBg, borderRadius: BorderRadius.circular(10)),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                icon,
+                color: Colors.white,
+                size: 50,
+              ),
+              const SizedBox(height: 5),
+              Text(
+                text,
+                style: const TextStyle(
+                  fontSize: 17,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   //List view achievement
   static Padding achievement(
       String text, String text2, String icon, bool color) {

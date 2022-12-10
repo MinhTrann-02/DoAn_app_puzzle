@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:app_puzzle/utils.dart';
 import 'home_page.dart';
@@ -12,114 +13,122 @@ class Profile extends StatefulWidget {
   }
 }
 
+final FirebaseAuth _auth = FirebaseAuth.instance;
+User user = _auth.currentUser!;
+
 class ProfileState extends State<Profile> {
-  final String documentId = 'bM1zeTSweCpD5Yk8bs8v';
+  final String _uid = user.uid;
 
   CollectionReference info = FirebaseFirestore.instance.collection('users');
   @override
   Widget build(BuildContext context) {
     List listBasket = [
-      "Gói nạp lần đầu",
-      "Gói combo 1",
-      "Gói combo 2",
+      // "Gói nạp lần đầu",
+      // "Gói combo 1",
+      // "Gói combo 2",
     ];
     return Scaffold(
       backgroundColor: const Color(0xFFE9F8FF),
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(320.0),
-        child: AppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: const Color(0xFFE9F8FF),
-          title: FutureBuilder<DocumentSnapshot>(
-              future: info.doc(documentId).get(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<DocumentSnapshot> snapshot) {
-                if (snapshot.hasError) {
-                  return const Text("Có gì đó sai sai?");
-                }
-                if (snapshot.hasData && !snapshot.data!.exists) {
-                  return const Text("Không trùng thông tin!");
-                }
-                if (snapshot.connectionState == ConnectionState.done) {
-                  Map<String, dynamic> data =
-                      snapshot.data!.data() as Map<String, dynamic>;
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Utils.stackHead_noAdd(
-                          data['star_point'].toString(), 'icons/icon-star.png'),
-                      Utils.stackHead(data['money_point'].toString(),
-                          'icons/icon-money.png'),
-                      Utils.stackHead(data['heart_point'].toString(),
-                          'icons/icon-heart.png'),
-                    ],
-                  );
-                }
-                return const Text("Loanding...");
-              }),
-          flexibleSpace: Stack(
-            alignment: AlignmentDirectional.bottomCenter,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 70),
-                child: Container(
-                  height: 200,
-                  color: const Color(0xFFB6FFAA),
+        child: FutureBuilder<DocumentSnapshot>(
+          future: info.doc(_uid).get(),
+          builder:
+              (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+            if (snapshot.hasError) {
+              return const Text("Có gì đó sai sai?");
+            }
+            if (snapshot.hasData && !snapshot.data!.exists) {
+              return const Text("Không trùng thông tin!");
+            }
+            if (snapshot.connectionState == ConnectionState.done) {
+              Map<String, dynamic> data =
+                  snapshot.data!.data() as Map<String, dynamic>;
+              return AppBar(
+                automaticallyImplyLeading: false,
+                backgroundColor: const Color(0xFFE9F8FF),
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Utils.stackHead_noAdd(
+                        data['star_point'].toString(), 'icons/icon-star.png'),
+                    Utils.stackHead(
+                        data['money_point'].toString(), 'icons/icon-money.png'),
+                    Utils.stackHead(
+                        data['heart_point'].toString(), 'icons/icon-heart.png'),
+                  ],
                 ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Utils.avatar(),
-                  const Text(
-                    'User Name',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  const SizedBox(width: 65),
-                  // Padding(
-                  //   padding: const EdgeInsets.only(bottom: 25),
-                  //   child: TextButton(
-                  //     onPressed: onTapEdit,
-                  //     style: TextButton.styleFrom(
-                  //       shape: RoundedRectangleBorder(
-                  //         borderRadius: BorderRadius.circular(50),
-                  //       ),
-                  //     ),
-                  //     child: const CircleAvatar(
-                  //       backgroundColor: Colors.white70,
-                  //       radius: 25,
-                  //       child: CircleAvatar(
-                  //         backgroundColor: Colors.grey,
-                  //         radius: 20,
-                  //         child: Icon(
-                  //           Icons.edit,
-                  //           color: Colors.white,
-                  //           size: 28,
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-                ],
-              ),
-            ],
-          ),
-          bottom: TabBar(
-            tabs: [
-              Tab(child: Utils.iconWithColor(Icons.local_play, 'Thành tích')),
-              Tab(child: Utils.iconWithColor(Icons.equalizer, 'Thống kê')),
-              Tab(
-                  child: Utils.iconWithColor(
-                Icons.shopping_basket,
-                'Mua hàng',
-              )),
-            ],
-            indicatorColor: Colors.black,
-            indicatorWeight: 7,
-            labelColor: Colors.black,
-            unselectedLabelColor: Colors.black54,
-            labelPadding: const EdgeInsets.only(bottom: 4),
-          ),
+                flexibleSpace: Stack(
+                  alignment: AlignmentDirectional.bottomCenter,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 70),
+                      child: Container(
+                        height: 200,
+                        color: const Color(0xFFB6FFAA),
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Utils.avatar(),
+                        Text(
+                          data['user_name'],
+                          style: const TextStyle(fontSize: 20),
+                        ),
+                        const SizedBox(width: 65),
+                        // Padding(
+                        //   padding: const EdgeInsets.only(bottom: 25),
+                        //   child: TextButton(
+                        //     onPressed: onTapEdit,
+                        //     style: TextButton.styleFrom(
+                        //       shape: RoundedRectangleBorder(
+                        //         borderRadius: BorderRadius.circular(50),
+                        //       ),
+                        //     ),
+                        //     child: const CircleAvatar(
+                        //       backgroundColor: Colors.white70,
+                        //       radius: 25,
+                        //       child: CircleAvatar(
+                        //         backgroundColor: Colors.grey,
+                        //         radius: 20,
+                        //         child: Icon(
+                        //           Icons.edit,
+                        //           color: Colors.white,
+                        //           size: 28,
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
+                      ],
+                    ),
+                  ],
+                ),
+                bottom: TabBar(
+                  tabs: [
+                    Tab(
+                        child: Utils.iconWithColor(
+                            Icons.local_play, 'Thành tích')),
+                    Tab(
+                        child:
+                            Utils.iconWithColor(Icons.equalizer, 'Thống kê')),
+                    Tab(
+                        child: Utils.iconWithColor(
+                      Icons.shopping_basket,
+                      'Mua hàng',
+                    )),
+                  ],
+                  indicatorColor: Colors.black,
+                  indicatorWeight: 7,
+                  labelColor: Colors.black,
+                  unselectedLabelColor: Colors.black54,
+                  labelPadding: const EdgeInsets.only(bottom: 4),
+                ),
+              );
+            }
+            return const Text("Loanding...");
+          },
         ),
       ),
       body: TabBarView(

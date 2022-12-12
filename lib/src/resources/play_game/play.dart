@@ -279,16 +279,14 @@ class PlayState extends State<Play> {
                             ),
                           ),
                           //Thoát
-                          Padding(
-                            padding: const EdgeInsets.only(top: 10),
-                            child: IconButton(
-                              onPressed: () {
-                                _outPlay(context);
-                              },
-                              icon: const Icon(Icons.exit_to_app),
-                              iconSize: 40,
-                              color: const Color(0xFF59A9DF),
-                            ),
+
+                          IconButton(
+                            onPressed: () {
+                              _outPlay(context);
+                            },
+                            icon: const Icon(Icons.exit_to_app),
+                            iconSize: 40,
+                            color: const Color(0xFF59A9DF),
                           ),
                         ],
                       ),
@@ -299,7 +297,7 @@ class PlayState extends State<Play> {
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: SizedBox(
-                              height: 80,
+                              height: 75,
                               child: ElevatedButton(
                                 onPressed: () {},
                                 style: ElevatedButton.styleFrom(
@@ -317,7 +315,7 @@ class PlayState extends State<Play> {
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: SizedBox(
-                              height: 80,
+                              height: 75,
                               child: ElevatedButton(
                                 onPressed: () {},
                                 style: ElevatedButton.styleFrom(
@@ -335,7 +333,7 @@ class PlayState extends State<Play> {
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: SizedBox(
-                              height: 80,
+                              height: 75,
                               child: ElevatedButton(
                                 onPressed: () {
                                   total_next++;

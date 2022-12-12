@@ -1,6 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:app_puzzle/src/resources/reset_password.dart';
+// import 'package:app_puzzle/src/resources/reset_password.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:app_puzzle/utils.dart';
@@ -128,11 +128,8 @@ class MenuState extends State<Menu> {
               ),
               shrinkWrap: true,
               children: [
-                Utils.gridViewButton_password(
-                    'Đổi mật khẩu',
-                    const Color(0xFFDC802B),
-                    Icons.lock_outline,
-                    onClick_resetPass),
+                Utils.gridViewButton_password('Đổi mật khẩu',
+                    const Color(0xFFDC802B), Icons.lock_outline, null),
               ],
             ),
           ),
@@ -186,13 +183,13 @@ class MenuState extends State<Menu> {
     );
   }
 
-  void onClick_resetPass() {
-    setState(() {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ResetPassword(),
-          ));
-    });
-  }
+  // void onClick_resetPass() {
+  //   setState(() {
+  //     Navigator.push(
+  //         context,
+  //         MaterialPageRoute(
+  //           builder: (context) => ResetPassword(),
+  //         ));
+  //   });
+  // }
 }

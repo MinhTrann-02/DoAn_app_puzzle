@@ -17,10 +17,30 @@ class Home extends StatefulWidget {
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final User user = _auth.currentUser!;
+late String username, star_point, money_point, heart_point;
 
 class HomeState extends State<Home> {
-  final String _uid = user.uid;
+  @override
+  void initState() {
+    super.initState();
+    getdata();
+  }
+
+  String _uid = user.uid;
   CollectionReference info = FirebaseFirestore.instance.collection('users');
+
+  void getdata() async {
+    User user = _auth.currentUser!;
+    _uid = user.uid;
+    DocumentSnapshot data =
+        await FirebaseFirestore.instance.collection('users').doc(_uid).get();
+    setState(() {
+      username = data.get('user_name');
+      star_point = data.get('star_point').toString();
+      money_point = data.get('money_point').toString();
+      heart_point = data.get('heart_point').toString();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,107 +52,86 @@ class HomeState extends State<Home> {
       "Admin",
       "TEst"
     ];
+
     return Scaffold(
       backgroundColor: const Color(0xFFE9F8FF),
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(370.0),
-        child: FutureBuilder<DocumentSnapshot>(
-            future: info.doc(_uid).get(),
-            builder: (BuildContext context,
-                AsyncSnapshot<DocumentSnapshot> snapshot) {
-              if (snapshot.hasError) {
-                return const Text("Có gì đó sai sai?");
-              }
-              if (snapshot.hasData && !snapshot.data!.exists) {
-                return const Text("Không trùng thông tin!");
-              }
-              if (snapshot.connectionState == ConnectionState.done) {
-                Map<String, dynamic> data =
-                    snapshot.data!.data() as Map<String, dynamic>;
-                return AppBar(
-                  automaticallyImplyLeading: false,
-                  backgroundColor: const Color(0xFFE9F8FF),
-                  title: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Utils.stackHead_noAdd(
-                          data['star_point'].toString(), 'icons/icon-star.png'),
-                      Utils.stackHead(data['money_point'].toString(),
-                          'icons/icon-money.png'),
-                      Utils.stackHead(data['heart_point'].toString(),
-                          'icons/icon-heart.png'),
-                    ],
-                  ),
-                  flexibleSpace: Column(
-                    children: [
-                      const SizedBox(height: 120),
-                      Utils.avatar(),
-                      const SizedBox(height: 10),
-                      Text(
-                        data['user_name'],
-                        style: const TextStyle(fontSize: 22),
-                      ),
-                      const SizedBox(height: 15),
-                      Row(
-                        children: [
-                          Expanded(child: Container(height: 56)),
-                          Expanded(
-                            flex: 3,
-                            child: Container(
-                              width: 100,
-                              height: 55,
-                              decoration: BoxDecoration(
-                                color: const Color(0xFF69DF59),
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              child: TextButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const ThemePage()));
-                                },
-                                child: const Text(
-                                  'Chơi',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
+          preferredSize: const Size.fromHeight(370.0),
+          child: AppBar(
+            automaticallyImplyLeading: false,
+            backgroundColor: const Color(0xFFE9F8FF),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Utils.stackHead_noAdd(star_point, 'icons/icon-star.png'),
+                Utils.stackHead(money_point, 'icons/icon-money.png'),
+                Utils.stackHead(heart_point, 'icons/icon-heart.png'),
+              ],
+            ),
+            flexibleSpace: Column(
+              children: [
+                const SizedBox(height: 120),
+                Utils.avatar(),
+                const SizedBox(height: 10),
+                Text(
+                  username,
+                  style: const TextStyle(fontSize: 22),
+                ),
+                const SizedBox(height: 15),
+                Row(
+                  children: [
+                    Expanded(child: Container(height: 56)),
+                    Expanded(
+                      flex: 3,
+                      child: Container(
+                        width: 100,
+                        height: 55,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF69DF59),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const ThemePage()));
+                          },
+                          child: const Text(
+                            'Chơi',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
                             ),
                           ),
-                          Expanded(child: Container(height: 56)),
-                        ],
+                        ),
                       ),
-                    ],
-                  ),
-                  bottom: TabBar(
-                    tabs: [
-                      Tab(
-                        child: Utils.iconWithColor(Icons.home, 'Trang chủ'),
-                      ),
-                      Tab(
-                        child:
-                            Utils.iconWithColor(Icons.event_note, 'Nhiệm vụ'),
-                      ),
-                      Tab(
-                        child: Utils.iconWithColor(Icons.people, 'Bạn bè'),
-                      ),
-                    ],
-                    indicatorColor: Colors.black,
-                    indicatorWeight: 7,
-                    labelColor: Colors.black,
-                    unselectedLabelColor: Colors.black54,
-                    labelPadding: const EdgeInsets.only(bottom: 5),
-                  ),
-                );
-              }
-              return const Text("Loanding...");
-            }),
-      ),
+                    ),
+                    Expanded(child: Container(height: 56)),
+                  ],
+                ),
+              ],
+            ),
+            bottom: TabBar(
+              tabs: [
+                Tab(
+                  child: Utils.iconWithColor(Icons.home, 'Trang chủ'),
+                ),
+                Tab(
+                  child: Utils.iconWithColor(Icons.event_note, 'Nhiệm vụ'),
+                ),
+                Tab(
+                  child: Utils.iconWithColor(Icons.people, 'Bạn bè'),
+                ),
+              ],
+              indicatorColor: Colors.black,
+              indicatorWeight: 7,
+              labelColor: Colors.black,
+              unselectedLabelColor: Colors.black54,
+              labelPadding: const EdgeInsets.only(bottom: 5),
+            ),
+          )),
       body: TabBarView(
         children: [
           Padding(
